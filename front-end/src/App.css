@@ -3,4 +3,6 @@ body {
   width: 100vw;
   padding: 10px;
   background-color: #2E0B0B;
+  display: flex;
+  justify-content: center;
 }

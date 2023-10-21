@@ -4,9 +4,17 @@
   justify-content: center;
 }
 .imageContainer {
-  width: 100%;
-  display: flex;
-  justify-content: space-evenly;
+ width: 100%;
+ height: 60%;
+ padding: 40;
+ display: flex;
+ justify-content: space-between;
+}
+.latex {
+  width: 400px;
+  height: 600px;
+  background-color: #04AA6D;
+  margin-top: 40px;
 }
 .customUpload {
   color: antiquewhite;

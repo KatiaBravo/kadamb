@@ -23,13 +23,13 @@ const FileUpload = () => {
     const data = {
       image: URL.createObjectURL(file),
       questionNumber: qNumber,
-      title: `Q${qNumber}`
-    }
+      title: `Q${qNumber}`,
+    };
     console.log(data);
 
     const updatedData = questions;
-    updatedData.push(data)
-    setQuestions(updatedData)
+    updatedData.push(data);
+    setQuestions(updatedData);
   };
   return (
     <div className="container">
@@ -56,18 +56,16 @@ const FileUpload = () => {
         </div>
       </div>
       <div className="imageContainer">
-        {image &&
+        {image && (
           // Array.from(Array(cardsUploaded).keys()).map((ele) => {
-          questions.map(({image, questionNumber, title}) => {
-            return (
-              <Cart
-                imgSrc={image}
-                qNumber={questionNumber}
-                title={`Q${questionNumber}`}
-                totalQuestionsNumber={totalQuestionsNumber}
-              />
-            );
-          })}
+          <>
+            <img
+              src={image}
+              style={{ width: 400, height: 600, marginTop: 40, marginRight: 40 }}
+            />
+            <div className="latex"></div>
+          </>
+        )}
       </div>
     </div>
   );
