@@ -1,13 +1,18 @@
-import logo from './logo.svg';
-import './App.css';
-import FileUpload from './components/fileUpload';
-import LatexCodeConvert from './components/latexConverter';
+import logo from "./logo.svg";
+import "./App.css";
+import FileUpload from "./components/fileUpload";
+import LatexCodeConvert from "./components/latexConverter";
+import { AppProvider } from "./providers/paper.provider";
 
 function App() {
   return (
-    <body>
-        <FileUpload/>
-    </body>
+    <AppProvider>
+      <body>
+        <div>
+          <FileUpload />
+        </div>
+      </body>
+    </AppProvider>
   );
 }
 

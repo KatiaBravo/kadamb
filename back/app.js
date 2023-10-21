@@ -5,6 +5,12 @@ import express from "express";
 import bodyParser from "body-parser";
 import multer from "multer";
 import fs from "fs";
+import cors from "cors";
+
+const app = express();
+app.use(bodyParser.json());
+app.use(cors());
+env.config();
 
 const storage = multer.diskStorage({
   destination: (req, file, cb) => {
@@ -16,12 +22,7 @@ const storage = multer.diskStorage({
 });
 const upload = multer({ storage: storage });
 
-const app = express();
-app.use(bodyParser.json());
-
 const port = 3000;
-
-env.config();
 
 const APPID = process.env.APPID;
 const waApi = WolframAlphaAPI(APPID);
@@ -61,8 +62,6 @@ const MathPix = async (file) => {
   };
 
   const imageBase64 = fs.readFileSync(file.path, { encoding: "base64" });
-  // console.log(imageBase64);
-  // return imageBase64;
 
   const body = {
     src: `data:image/jpeg;base64,${imageBase64}`,
@@ -118,5 +117,5 @@ app.get("/", (req, res) => {
 });
 
 app.listen(port, () => {
-  console.log(`Example app listening on port ${port}`);
+  console.log(`Example app listening on http://localhost:${port}`);
 });
