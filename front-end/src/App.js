@@ -8,7 +8,7 @@ function App() {
   return (
     <AppProvider>
       <body>
-        <div>
+        <div >
           <FileUpload />
         </div>
       </body>

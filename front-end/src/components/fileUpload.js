@@ -12,10 +12,12 @@ const FileUpload = () => {
   const [image, setImage] = useState();
   const [cardsUploaded, setCardsUploaded] = useState(0);
   const [questions, setQuestions] = useState([]);
+  const [input, setInput] = useState();
 
   const fileHandler = (event) => {
     setFile(event.target.files[0]);
   };
+
 
   const submissionHandler = (qNumber, event) => {
     event.preventDefault();
@@ -34,9 +36,16 @@ const FileUpload = () => {
     updatedData.push(data);
     setQuestions(updatedData);
   };
+  const inputSubmission = () => {
+
+  }
   return (
     <div className="container">
       <div className="fileUpload">
+        <div>
+        <input type = "text" style = {{marginRight: 40}} />
+        <button onClick={inputSubmission} style = {{marginRight: 40}}>Submit</button>
+        </div>
         <input
           type="file"
           name="file"
@@ -61,7 +70,6 @@ const FileUpload = () => {
       <div className="imageContainer">
         {image && (
           // Array.from(Array(cardsUploaded).keys()).map((ele) => {
-<<<<<<< HEAD
           <>
             <img
               src={image}
@@ -70,18 +78,6 @@ const FileUpload = () => {
             <div className="latex"></div>
           </>
         )}
-=======
-          questions.map(({ image, questionNumber, title }) => {
-            return (
-              <Cart
-                imgSrc={image}
-                qNumber={questionNumber}
-                title={`Q${questionNumber}`}
-                totalQuestionsNumber={totalQuestionsNumber}
-              />
-            );
-          })}
->>>>>>> 77c921267838d01aceb0caf97c48fd05fca56036
       </div>
     </div>
   );
