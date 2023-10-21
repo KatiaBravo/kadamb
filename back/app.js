@@ -1,65 +1,122 @@
 import WolframAlphaAPI from "@wolfram-alpha/wolfram-alpha-api";
-import { MathMLToLaTeX } from "mathml-to-latex";
-// import xmlbuilder from "xmlbuilder";
 import env from "dotenv";
 import axios from "axios";
+import express from "express";
+import bodyParser from "body-parser";
+import multer from "multer";
+import fs from "fs";
+
+const storage = multer.diskStorage({
+  destination: (req, file, cb) => {
+    cb(null, "uploads/"); // Specify the upload directory
+  },
+  filename: (req, file, cb) => {
+    cb(null, file.originalname); // Use the original filename
+  },
+});
+const upload = multer({ storage: storage });
+
+const app = express();
+app.use(bodyParser.json());
+
+const port = 3000;
 
 env.config();
 
 const APPID = process.env.APPID;
 const waApi = WolframAlphaAPI(APPID);
 
-const getData = async () => {
-  try {
-    const input = "Limits of sin(x)/x as x approaches 0";
-    const result = await waApi.getFull({
-      input,
-      format: "mathml",
+const wolfram = async (input) => {
+  const result = await waApi.getFull({
+    input,
+    format: "mathml",
+  });
+  // console.log(result);
+  const { pods } = result;
+  // return result;
+  let ans = "";
+  pods.map(({ subpods }) => {
+    console.log(subpods);
+    if (!subpods) return;
+    subpods.map((pods) => {
+      if (pods.mathml) {
+        const { subpods } = pods;
+        console.log(pods.mathml);
+        ans += pods.mathml + "\\";
+        // return {
+        // latex: MathMLToLaTeX.convert(pods.mathml),
+        // mathml: pods.mathml,
+        // subpods,
+        // };
+      }
     });
-    console.log(result);
-    const { pods } = result;
-    return pods.map(({ subpods }) => {
-      console.log(subpods);
-      if (!subpods) return;
-      return subpods.map((pods) => {
-        if (pods.mathml) {
-          const { subpods } = pods;
-          console.log(pods.mathml);
-          return {
-            latex: MathMLToLaTeX.convert(pods.mathml),
-            mathml: pods.mathml,
-            subpods,
-          };
-        }
-      });
-    });
-  } catch (err) {
-    console.log(err);
-  }
+  });
+  return { mathml: ans };
 };
 
-const MathPix = async () => {
+const MathPix = async (file) => {
   const headers = {
     app_id: process.env.MATHPIX_APP_ID,
     app_key: process.env.MATHPIX_APP_KEY,
   };
+
+  const imageBase64 = fs.readFileSync(file.path, { encoding: "base64" });
+  // console.log(imageBase64);
+  // return imageBase64;
+
   const body = {
-    src: "https://cdn.discordapp.com/attachments/1165004522331058286/1165182431964438528/ImageModel.jpg?ex=6545ebb3&is=653376b3&hm=1089c25cf99a90872935555b13a951d2e104747ddaa2605af6d67306818f0bbd",
+    src: `data:image/jpeg;base64,${imageBase64}`,
     formats: ["latex_styled", "text"],
     data_options: {
       include_asciimath: true,
     },
   };
-  try {
-    const result = await axios.post("https://api.mathpix.com/v3/text", body, {
-      headers,
-    });
-    console.log("Err", result.data);
-    return result;
-  } catch (err) {
-    console.log(err);
-  }
+  const { data } = await axios.post("https://api.mathpix.com/v3/text", body, {
+    headers,
+  });
+
+  return data;
 };
 
-console.log(getData());
-// console.log(MathPix());
+app.post("/wolfram/pic", async (req, res) => {
+  const { input } = req.body;
+  const data = await waApi.getSimple({ input, format: "image" });
+  res.send(data);
+});
+
+app.post("/wolfram", async (req, res) => {
+  try {
+    const { format } = req.query;
+    if (!["mathml", "latex"].includes(format)) {
+      throw new Error("the format is not supported");
+    }
+
+    const { input } = req.body;
+    let data = await wolfram(input);
+    if (format === "latex") {
+      data = (await axios.post("http://127.0.0.1:5000/convert", data)).data;
+    }
+    res.send(data);
+  } catch (err) {
+    res.status(400).send({ message: err.message });
+  }
+});
+
+app.post("/mathpix", upload.single("file"), async (req, res) => {
+  try {
+    const { file } = req;
+    console.log("file", file);
+    const data = await MathPix(file);
+    res.send(data);
+  } catch (err) {
+    res.status(400).send({ message: err.message });
+  }
+});
+
+app.get("/", (req, res) => {
+  res.send("Hello World!");
+});
+
+app.listen(port, () => {
+  console.log(`Example app listening on port ${port}`);
+});
