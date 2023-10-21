@@ -1,30 +1,23 @@
 // for both student answer and wolfram answer
-// const fs = require('fs');
-import fs from "fs";
-// const student_latex = 'C:/Users/katia/Documents/GitHub/kadamb/back/series_tester_incorrect.tex';
-const student_latex = 'series_tester_incorrect.tex';
-// const wolfram_latex = 'C:/Users/katia/Documents/GitHub/kadamb/back/series_tester_correct.tex';
-const wolfram_latex = 'series_tester_correct.tex';
+import fs from "fs"
+import { stringify } from "querystring";
+// const student_latex = 'series_tester_incorrect.tex';
+const student_latex = 'quadratics_simple_i.tex'; // Derivative/quadratics
+// const wolfram_latex = 'series_tester_correct.tex';
+const wolfram_latex = 'quadratics_simple_c.tex'; // Derivative/quadratics
+
 
 // step 1: seperate lines into individual strings/objects (list)
 
 async function splitLatexLines(latexPath) {
-    try{
-        console.log("latexPath", latexPath)
-        const data = fs.readFileSync(latexPath, 'utf-8', (err, latexContent) => {
-            // console.log("latexContent", latexContent)
-            // if (err) {
-            //     console.error('Error reading the file:', err);
-            // } else {
-            //     return latexContent.split(`\\`); // const filteredLatexArray = latexArray.filter(item => item.trim() !== '');
-            // }
-        });
-        // console.log(data.split(`\\\\`))
-        return data.split(`\\\\`);
-    } catch (err) {
-        console.log(err)
-    } 
+    console.log("latexPath", latexPath)
+    var data = fs.readFileSync(latexPath, 'utf-8', (err, latexContent) => {});
+    // console.log(data.split(`\\\\`))
+    var split_data = data.split('\r\n    ');
+    // split_data[0] = split_data.splice('\\\\');
+    return split_data;
 }
+// WORKS
 
 var student_pods = await splitLatexLines(student_latex);
 var wolfram_pods = await splitLatexLines(wolfram_latex);
@@ -32,7 +25,11 @@ var wolfram_pods = await splitLatexLines(wolfram_latex);
 // step 2: for each line, seperate the object into terms (list)
 
 function splitLatexTerms(pods) { //TODO: this should be looping through all the lines
-    var split_pods = [pods.split('+')]
+    // console.log("pre split latex: ", pods);
+    var split_pods = pods.replace(/\\/g, '').replace('begin{alined}', '').replace('end{aligned}', '').replace('\\r\\n', '').split('+'); //not useful for non quadratic formulas
+    // var split_equals = split_pods.split('=');
+    // can also be if \\ is found along with {}
+    console.log("split latex terms: ", split_pods);
     // check if terms are fully split, if not, split using another character 
     // remove any empty items in the array before returning
     return split_pods;
@@ -54,24 +51,15 @@ var graded_work = []; // used to track term accuracy
 // step 3: loop through items in wolfram, search the student answer for each term
 function check_student_work(s_broken, w_broken, compared_terms) {
     w_broken.forEach(function(w_term) {
-        const temp = s_broken.map(function(s_term) { // WARNING: may not loop through the two sets of terms correctly
+        console.log("Wolfram term: ", w_term);
+        compared_terms.push(s_broken.map(function(s_term) { // WARNING: may not loop through the two sets of terms correctly
             // step 4: determine the accuracy of the answer
             if (w_term == s_term) { // best case scenario
                 // TODO: right way to compare terms in latex?; seems to work for strings
+                console.log("S-term: " + s_term)
                 return s_term; // TODO: possible this doesn't work
             } else {
-                console.log("Wolfram term: ${w_term}, Student term: ${s_term}")
-                return "flag";
-            }
-        });
-        console.log("temp")
-       compared_terms.push(s_broken.map(function(s_term) { // WARNING: may not loop through the two sets of terms correctly
-            // step 4: determine the accuracy of the answer
-            if (w_term == s_term) { // best case scenario
-                // TODO: right way to compare terms in latex?; seems to work for strings
-                return s_term; // TODO: possible this doesn't work
-            } else {
-                console.log("Wolfram term: ${w_term}, Student term: ${s_term}")
+                console.log("Student term: ", s_term)
                 return "flag";
             }
         }));
@@ -98,10 +86,7 @@ function accuracy_calculator(grades) {
 var student_grade = accuracy_calculator(graded_work);
 
 function print_grade(final_grade) {
-    console.log(final_grade)
-    final_grade.forEach(function(step) {
-        console.log(step);
-    });
+    console.log(final_grade);
 }
 
 print_grade(student_grade);
