@@ -1,0 +1,36 @@
+.cart {
+    min-width: 300px;
+    height: 340px;
+    background-color: #d6c518;
+    border-radius: 5px;
+    box-shadow: 0px 0px 15px -5px;
+    overflow: hidden;
+    transition: 0.3s;
+    animation: ease-in-out;
+    margin-top: 40px;
+}
+.cart:hover {
+    transform: scale(1.1);
+    box-shadow: 0px 0px 15px 0px;
+
+}
+.titleContainer{
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    padding-left: 10px; 
+}
+.paragraph{
+    color: white;
+
+}
+.title {
+    color: white;
+    font-size: medium;
+    font-size: 20px;
+}
+.imageContain img{
+    overflow: hidden;
+    height: 200px;
+    width: 100%;
+}

@@ -1,35 +1,68 @@
-.container {
-    
-}
-.fileUpload{
-    display: flex;
-    width: 100%;
-    justify-content: center;
+.fileUpload {
+  display: flex;
+  width: 100%;
+  justify-content: center;
 }
 .imageContainer {
-    padding: 30px;
-    width: 100%;
-    height: 100%;
+  width: 100%;
+  display: flex;
+  justify-content: space-evenly;
 }
 .customUpload {
-    color:antiquewhite
+  color: antiquewhite;
 }
 input[type="file"]::file-selector-button {
-    border: 2px solid #D6C518;
-    padding: 0.2em 0.4em;
-    border-radius: 0.2em;
-    transition: 1s;
-  }
-  
-  input[type="file"]::file-selector-button:hover {
-    background-color: #D6C518;
-  }
-  .uploadButton{
-    border: 2px solid #D6C518;
-    padding: 0.2em 0.4em;
-    border-radius: 0.2em;
-    transition: 1s;
-  }
-  .uploadButton:hover{
-    background-color: #D6C518;
-  }
+  border: 2px solid #d6c518;
+  padding: 0.2em 0.4em;
+  border-radius: 0.2em;
+}
+
+input[type="file"]::file-selector-button:hover {
+  background-color: #d6c518;
+}
+.uploadButton {
+  border: 2px solid #d6c518;
+  padding: 0.2em 0.4em;
+  border-radius: 0.2em;
+  width: 100px;
+}
+.uploadButton:hover {
+  background-color: #d6c518;
+}
+.dropbtn {
+  background-color: #04AA6D;
+  color: white;
+  padding: 16px;
+  font-size: 16px;
+  border: none;
+}
+
+/* The container <div> - needed to position the dropdown content */
+.dropdown {
+  position: relative;
+  display: inline-block;
+}
+
+/* Dropdown Content (Hidden by Default) */
+.dropdown-content {
+  display: none;
+  position: absolute;
+  background-color: #f1f1f1;
+  min-width: 160px;
+  box-shadow: 0px 8px 16px 0px rgba(0,0,0,0.2);
+  z-index: 1;
+}
+
+/* Links inside the dropdown */
+.dropdown-content a {
+  color: black;
+  padding: 12px 16px;
+  text-decoration: none;
+  display: block;
+}
+
+/* Change color of dropdown links on hover */
+.dropdown-content a:hover {background-color: #d6c518;}
+
+/* Show the dropdown menu on hover */
+.dropdown:hover .dropdown-content {display: block;}

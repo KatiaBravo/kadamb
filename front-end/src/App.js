@@ -6,9 +6,7 @@ import LatexCodeConvert from './components/latexConverter';
 function App() {
   return (
     <body>
-      <div >
         <FileUpload/>
-        </div>
     </body>
   );
 }
