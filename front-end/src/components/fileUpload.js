@@ -2,12 +2,10 @@ import React from "react";
 import { useState } from "react";
 import "./fileUpload.css";
 import Cart from "./cart";
-import { useApp } from "../providers/paper.provider";
 
 const totalQuestionsNumber = 5;
 
 const FileUpload = () => {
-  const { uploadFile } = useApp();
   const [file, setFile] = useState();
   const [image, setImage] = useState();
   const [cardsUploaded, setCardsUploaded] = useState(0);
@@ -22,7 +20,6 @@ const FileUpload = () => {
   const submissionHandler = (qNumber, event) => {
     event.preventDefault();
     setCardsUploaded((cardsUploaded) => (cardsUploaded = cardsUploaded + 1));
-    uploadFile(file);
     setImage(URL.createObjectURL(file));
 
     const data = {
@@ -73,7 +70,12 @@ const FileUpload = () => {
           <>
             <img
               src={image}
-              style={{ width: 400, height: 600, marginTop: 40, marginRight: 40 }}
+              style={{
+                width: 400,
+                height: 600,
+                marginTop: 40,
+                marginRight: 40,
+              }}
             />
             <div className="latex"></div>
           </>
