@@ -2,10 +2,12 @@ import React from "react";
 import { useState } from "react";
 import "./fileUpload.css";
 import Cart from "./cart";
+import { useApp } from "../providers/paper.provider";
 
 const totalQuestionsNumber = 5;
 
 const FileUpload = () => {
+  const { uploadFile } = useApp();
   const [file, setFile] = useState();
   const [image, setImage] = useState();
   const [cardsUploaded, setCardsUploaded] = useState(0);
@@ -18,6 +20,7 @@ const FileUpload = () => {
   const submissionHandler = (qNumber, event) => {
     event.preventDefault();
     setCardsUploaded((cardsUploaded) => (cardsUploaded = cardsUploaded + 1));
+    uploadFile(file);
     setImage(URL.createObjectURL(file));
 
     const data = {
@@ -58,6 +61,7 @@ const FileUpload = () => {
       <div className="imageContainer">
         {image && (
           // Array.from(Array(cardsUploaded).keys()).map((ele) => {
+<<<<<<< HEAD
           <>
             <img
               src={image}
@@ -66,6 +70,18 @@ const FileUpload = () => {
             <div className="latex"></div>
           </>
         )}
+=======
+          questions.map(({ image, questionNumber, title }) => {
+            return (
+              <Cart
+                imgSrc={image}
+                qNumber={questionNumber}
+                title={`Q${questionNumber}`}
+                totalQuestionsNumber={totalQuestionsNumber}
+              />
+            );
+          })}
+>>>>>>> 77c921267838d01aceb0caf97c48fd05fca56036
       </div>
     </div>
   );
