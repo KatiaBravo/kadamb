@@ -15,8 +15,8 @@ export const AppProvider = ({ children }) => {
     var myHeaders = new Headers();
     myHeaders.append("app_id", process.env.REACT_APP_MATHPIX_APP_ID);
     myHeaders.append("app_key", process.env.REACT_APP_MATHPIX_APP_KEY);
-    const MATHPIX = process.env.REACT_APP_NODE_URL;
-    // console.log(MATHPIX);
+    const NODE = process.env.REACT_APP_NODE_URL;
+    // console.log(NODE);
     var requestOptions = {
       method: "POST",
       headers: myHeaders,
@@ -24,7 +24,7 @@ export const AppProvider = ({ children }) => {
       redirect: "follow",
     };
 
-    fetch(`${MATHPIX}/mathpix`, requestOptions)
+    fetch(`${NODE}/mathpix`, requestOptions)
       .then((response) => {
         return response.text();
       })
@@ -35,6 +35,30 @@ export const AppProvider = ({ children }) => {
         setFiles(before);
         console.log(files);
       })
+      .catch((error) => console.log("error", error));
+  };
+
+  const compareFile = async (studentLatex, correctLatex) => {
+    var myHeaders = new Headers();
+    myHeaders.append("Content-Type", "application/json");
+
+    var raw = JSON.stringify({
+      studentLatex,
+      correctLatex,
+    });
+
+    var requestOptions = {
+      method: "POST",
+      headers: myHeaders,
+      body: raw,
+      redirect: "follow",
+    };
+    const NODE = process.env.REACT_APP_NODE_URL;
+    const PYTHON = process.env.REACT_APP_PYTHON_URL;
+
+    fetch(`${PYTHON}/compare`, requestOptions)
+      .then((response) => response.text())
+      .then((result) => console.log(result))
       .catch((error) => console.log("error", error));
   };
 
