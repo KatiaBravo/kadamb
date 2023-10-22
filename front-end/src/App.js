@@ -7,14 +7,14 @@ import { AppProvider } from "./providers/paper.provider";
 
 function App() {
   return (
-    <AppProvider>
-      <body>
-        <div >
+    <body>
+      <AppProvider>
+        <div>
           <FileUpload />
           <MarkdownRender />
         </div>
-      </body>
-    </AppProvider>
+      </AppProvider>
+    </body>
   );
 }
 

@@ -1,7 +1,9 @@
 from flask import Flask, request
+from flask_cors import CORS
 from dotenv import load_dotenv
 import openai
 import os
+
 
 load_dotenv()
 
@@ -9,7 +11,7 @@ openai_key = os.environ['OPENAI_KEY']
 openai.api_key = openai_key
 
 app = Flask(__name__)
-
+CORS(app)
 
 
 def get_completion(prompt, model="gpt-3.5-turbo"):
@@ -32,6 +34,7 @@ async def converter(mathml):
   return response
 
 def separate_steps(latex):
+  print(latex)
   return str(latex.replace("\n", '').split("\\"))
 
 def compare(student,right):
@@ -50,7 +53,7 @@ def compare(student,right):
   Repeat this process for each of the steps in the student's solution to identify all the missing or wrong ones ones. list all the mathematical differnces.
 
   based on the differences found, double check the modified version of student solution, and output the modified latex of the student. also output the mathematical difference you found not the formatting error however.
-
+display tour
   Answer Key Response:
   ```{right}```
 
@@ -71,16 +74,16 @@ async def convertMathMlToLatex():
     body = request.get_json()
     mathml = body["mathml"]
     data = {}
-    latex = await converter(mathml)
-    data['latex'] = latex.replace("\n", "")
+    data['latex'] = await converter(mathml)
     return data
 
 
 @app.post("/compare")
 async def compareCorrectLatexWithStudets(): 
     body = request.get_json()
-    correctLatex = body["correctLatex"]
     studentLatex = body["studentLatex"]
+    correctLatex = body["correctLatex"]
+    print("hello world!\n", studentLatex, correctLatex)
     steps = separate_steps(correctLatex)
     return compare(correctLatex, steps)
 

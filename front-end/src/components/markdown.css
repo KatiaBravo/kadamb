@@ -1,3 +1,9 @@
-.math-elemnt {
-  color: black;
+#math-element {
+  color: white;
+  /* margin-top: 200px; */
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  height: 100vh;
+  width: 400px;
 }

@@ -1,9 +1,9 @@
 import React from "react";
 import { useState } from "react";
 import "./fileUpload.css";
-import Cart from "./cart";
-
-const totalQuestionsNumber = 5;
+// import Cart from "./cart";
+import { useApp } from "../providers/paper.provider";
+import MathExample from "./markdown";
 
 const FileUpload = () => {
   const [file, setFile] = useState();
@@ -11,37 +11,37 @@ const FileUpload = () => {
   const [cardsUploaded, setCardsUploaded] = useState(0);
   const [questions, setQuestions] = useState([]);
   const [input, setInput] = useState();
+  const { solveByWolfram, uploadFile } = useApp();
 
   const fileHandler = (event) => {
     setFile(event.target.files[0]);
   };
 
-
-  const submissionHandler = (qNumber, event) => {
+  const submissionHandler = (event) => {
     event.preventDefault();
     setCardsUploaded((cardsUploaded) => (cardsUploaded = cardsUploaded + 1));
     setImage(URL.createObjectURL(file));
-
-    const data = {
-      image: URL.createObjectURL(file),
-      questionNumber: qNumber,
-      title: `Q${qNumber}`,
-    };
-    console.log(data);
-
-    const updatedData = questions;
-    updatedData.push(data);
-    setQuestions(updatedData);
+    uploadFile(file);
   };
-  const inputSubmission = () => {
-
-  }
+  const inputSubmission = (e) => {
+    e.preventDefault();
+    solveByWolfram(input);
+  };
   return (
     <div className="container">
       <div className="fileUpload">
         <div>
-        <input type = "text" style = {{marginRight: 40}} />
-        <button onClick={inputSubmission} style = {{marginRight: 40}}>Submit</button>
+          <input
+            type="text"
+            onChange={(e) => {
+              console.log(e.target.value);
+              setInput(e.target.value);
+            }}
+            style={{ marginRight: 40 }}
+          />
+          <button onClick={inputSubmission} style={{ marginRight: 40 }}>
+            Submit
+          </button>
         </div>
         <input
           type="file"
@@ -50,18 +50,13 @@ const FileUpload = () => {
           onChange={fileHandler}
           style={{ color: "#D6C518 " }}
         />
-        <div class="dropdown">
-          <button class="uploadButton">Upload</button>
-          <div class="dropdown-content">
-            {Array.from(Array(totalQuestionsNumber).keys()).map((ele) => {
-              ele++;
-              return (
-                <a href="#" onClick={(e) => submissionHandler(ele, e)}>
-                  Question {ele}
-                </a>
-              );
-            })}
-          </div>
+        <div className="dropdown">
+          <button
+            className="uploadButton"
+            onClick={(e) => submissionHandler(e)}
+          >
+            Upload
+          </button>
         </div>
       </div>
       <div className="imageContainer">
@@ -77,7 +72,8 @@ const FileUpload = () => {
                 marginRight: 40,
               }}
             />
-            <div className="latex"></div>
+            {/* <div className="latex"></div> */}
+            <MathExample />
           </>
         )}
       </div>
